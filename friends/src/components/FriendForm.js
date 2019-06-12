@@ -3,7 +3,7 @@ import React from 'react';
 export default class FriendForm extends React.Component {
     constructor(){
         super();
-        this.state= {
+        this.state = {
             friendData:{
                 name:"",
                 age:"",
@@ -22,6 +22,7 @@ export default class FriendForm extends React.Component {
     postFriend =  event => {
         event.preventDefault();
         this.props.postFriend(this.state.friendData);
+        window.location.reload();
     }
     render(){
         return (

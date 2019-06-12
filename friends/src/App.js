@@ -26,10 +26,18 @@ export default class App extends React.Component{
     .catch(err => console.log(err));
   }
 
+  deleteFriend = (id) =>{
+    axios
+      .delete(`http://localhost:5000/friends/${id}`)
+      .then(response => console.log("delete is a go", response))
+      .catch(err => console.log(err));
+    window.location.reload();
+  }
+
   render(){
     return (
       <div className="App">
-        <FriendsList friends={this.state.friendsData}/>
+        <FriendsList friends={this.state.friendsData} deleteFriend={this.deleteFriend}/>
         <FriendForm postFriend = {this.addFriend}/>
       </div>
     );
