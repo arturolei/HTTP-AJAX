@@ -9,7 +9,8 @@ export default class App extends React.Component{
   constructor(){
     super();
     this.state={
-      friendsData:[]
+      friendsData:[],
+      activeFriend: null
     }
   }
   componentDidMount(){
@@ -22,8 +23,9 @@ export default class App extends React.Component{
   addFriend = (friend) => {
     axios
     .post('http://localhost:5000/friends', friend)
-    .then(response => console.log("success",response))
+    .then(res => this.setState({friendsData:res.data}))
     .catch(err => console.log(err));
+    window.location.reload();
   }
 
   deleteFriend = (id) =>{
@@ -34,11 +36,31 @@ export default class App extends React.Component{
     window.location.reload();
   }
 
+
+  updateFriend = (friend)=> {
+    axios
+    .put(`http://localhost:5000/friends/${friend.id}`, friend)
+    .then(response => this.setState({
+      activeFriend: null,
+      friendsData: response.data
+    }))
+    .catch(err => console.log(err));
+    window.location.reload();
+
+  }
+  
+  //Designates which friend is going to be updated
+  setUpdateMode = (friend) =>{
+    this.setState({
+      activeFriend:friend
+    })
+  }
+
   render(){
     return (
       <div className="App">
-        <FriendsList friends={this.state.friendsData} deleteFriend={this.deleteFriend}/>
-        <FriendForm postFriend = {this.addFriend}/>
+        <FriendsList friends={this.state.friendsData} deleteFriend={this.deleteFriend} setUpdateMode={this.setUpdateMode}/>
+        <FriendForm activeFriend={this.state.activeFriend} postFriend = {this.addFriend} updateFriend={this.updateFriend}/>
       </div>
     );
   }

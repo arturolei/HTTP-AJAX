@@ -1,17 +1,29 @@
 import React from 'react';
 
 export default class FriendForm extends React.Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
-            friendData:{
+            friendData: this.props.activeFriend || {
                 name:"",
                 age:"",
                 email:""
             }
         }; 
     }
+
+    componentDidUpdate(prevProps) {
+        if (
+            this.props.activeFriend && 
+            prevProps.activeFriend !== this.props.activeFriend
+        ) {
+            this.setState({
+                friendData: this.props.activeFriend
+            })
+        }
+    }
     eventHandler = event =>{
+        event.persist();
         this.setState({
             friendData:{
                 ...this.state.friendData,
@@ -19,14 +31,27 @@ export default class FriendForm extends React.Component {
             }
         })
     }
-    postFriend =  event => {
+    submitChange =  event => {
         event.preventDefault();
-        this.props.postFriend(this.state.friendData);
-        window.location.reload();
+        if (this.props.activeFriend){
+            this.props.updateFriend(this.state.friendData)
+        }
+        else{
+            this.props.postFriend(this.state.friendData);
+        }
+        this.setState({
+            friendData:{
+                name:"",
+                age:"",
+                email:""
+            }
+
+        });
+        
     }
     render(){
         return (
-            <form onSubmit={this.postFriend}>
+            <form onSubmit={this.submitChange}>
                 <input 
                     type="text"
                     name="name"
@@ -44,11 +69,11 @@ export default class FriendForm extends React.Component {
                 <input 
                     type="text"
                     name="email"
-                    placeholder="Name"
+                    placeholder="email"
                     onChange={this.eventHandler}
                     value = {this.state.friendData.email} 
                 />
-                <button>ADD FRIEND (POST)</button>
+                <button>{this.props.activeFriend ? "UPDATE":"ADD"} FRIEND (POST)</button>
             </form>
         );
     }
