@@ -1,4 +1,6 @@
 import React from 'react';
+import './friends.css'
+
 
 export default class FriendForm extends React.Component {
     constructor(props){
@@ -51,7 +53,7 @@ export default class FriendForm extends React.Component {
     }
     render(){
         return (
-            <form onSubmit={this.submitChange}>
+            <form className="friend-form" onSubmit={this.submitChange}>
                 <input 
                     type="text"
                     name="name"
@@ -73,7 +75,7 @@ export default class FriendForm extends React.Component {
                     onChange={this.eventHandler}
                     value = {this.state.friendData.email} 
                 />
-                <button>{this.props.activeFriend ? "UPDATE":"ADD"} FRIEND (POST)</button>
+                <button>{this.props.activeFriend ? "UPDATE":"ADD"} FRIEND</button>
             </form>
         );
     }
